@@ -27,7 +27,7 @@ import androidx.core.app.NotificationCompat;
 
 import java.util.Objects;
 
-import static app.hack.eightballpool.App.CHANNEL_ID;
+import static com.letsgo.goated.App.CHANNEL_ID;
 
 import myproject.R;
 
