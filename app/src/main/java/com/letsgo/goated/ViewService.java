@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.util.DisplayMetrics;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
@@ -109,6 +110,29 @@ public class ViewService extends Service {
         updateOverlayDimensions();
         updateGuidelinesProperties();
         updateStepButtonStyles();
+    }
+
+    private void autoAlignDimensions() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        if (windowManager != null) {
+            windowManager.getDefaultDisplay().getMetrics(metrics);
+            int screenW = metrics.widthPixels;
+            int screenH = metrics.heightPixels;
+
+            int w = Math.max(screenW, screenH);
+            int h = Math.min(screenW, screenH);
+
+            canvasHeight = (int) (h * 0.6768f);
+            canvasWidth = canvasHeight * 2;
+
+            boardHeight = (int) (h * 0.8305f);
+            boardWidth = (int) (boardHeight * 1.806f);
+
+            canvasMarginTop = (boardHeight - canvasHeight) / 2;
+
+            updateOverlayDimensions();
+        }
     }
 
     private void updateOverlayDimensions() {
@@ -348,6 +372,14 @@ public class ViewService extends Service {
                 isGuideVisible = false;
                 board.setBackgroundColor(0x00000000);
                 layoutAdjustPanel.setVisibility(View.GONE);
+            }
+        });
+
+        view.findViewById(R.id.btn_auto_align).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                autoAlignDimensions();
             }
         });
 
