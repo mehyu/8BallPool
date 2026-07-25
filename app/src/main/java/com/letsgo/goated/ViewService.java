@@ -49,6 +49,7 @@ public class ViewService extends Service {
     private float accel, accelCurrent, accelLast;
 
     boolean secondLine = false;
+    private boolean isGuideVisible = false;
 
     private SharedPreferences prefs;
     private int boardWidth, boardHeight, canvasWidth, canvasHeight, canvasMarginTop;
@@ -203,11 +204,26 @@ public class ViewService extends Service {
         setupAdjustmentButton(R.id.btn_dec_margin, -5, "margin");
         setupAdjustmentButton(R.id.btn_inc_margin, 5, "margin");
 
+        view.findViewById(R.id.btn_toggle_guide).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                isGuideVisible = !isGuideVisible;
+                if (isGuideVisible) {
+                    board.setBackgroundColor(0x60FFFFFF); // #60FFFFFF (colorAlphaWhite)
+                } else {
+                    board.setBackgroundColor(0x00000000); // transparent
+                }
+            }
+        });
+
         view.findViewById(R.id.btn_save_config).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mediaPlayer.start();
                 saveDimensions();
+                isGuideVisible = false;
+                board.setBackgroundColor(0x00000000);
                 layoutAdjustPanel.setVisibility(View.GONE);
             }
         });
@@ -224,6 +240,8 @@ public class ViewService extends Service {
             @Override
             public void onClick(View v) {
                 mediaPlayer.start();
+                isGuideVisible = false;
+                board.setBackgroundColor(0x00000000);
                 layoutAdjustPanel.setVisibility(View.GONE);
             }
         });

@@ -314,11 +314,19 @@
                 android:layout_height="35dp"
                 android:orientation="horizontal">
                 <Button
+                    android:id="@+id/btn_toggle_guide"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:textSize="9sp"
+                    android:text="GUIDE"
+                    android:layout_marginEnd="2dp" />
+                <Button
                     android:id="@+id/btn_save_config"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:text="SAVE"
                     android:layout_marginEnd="2dp" />
                 <Button
@@ -326,7 +334,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:text="RESET"
                     android:layout_marginEnd="2dp" />
                 <Button
@@ -334,7 +342,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:text="CLOSE" />
             </LinearLayout>
         </LinearLayout>
