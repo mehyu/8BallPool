@@ -156,4 +156,28 @@ public class Normal extends View {
         xCircle = x;
         yCircle = y;
     }
+
+    private int customColor = Color.WHITE;
+    private int opacityPercent = 100;
+
+    public void setGuideColor(int color) {
+        this.customColor = color;
+        line.setColor(color);
+        circle.setColor(color);
+        shadow.setColor(color);
+        applyOpacity();
+    }
+
+    public void setGuideOpacity(int opacityPercent) {
+        this.opacityPercent = opacityPercent;
+        applyOpacity();
+    }
+
+    private void applyOpacity() {
+        int mainAlpha = (int) (opacityPercent * 2.55f);
+        line.setAlpha(mainAlpha);
+        circle.setAlpha(mainAlpha);
+        shadow.setAlpha((int) (opacityPercent * 2.55f * 0.4f));
+        invalidate();
+    }
 }

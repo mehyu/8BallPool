@@ -593,4 +593,39 @@ public class Trickshot extends View {
 
         invalidate();
     }
+
+    private int customColor = Color.WHITE;
+    private int opacityPercent = 100;
+
+    public void setGuideColor(int color) {
+        this.customColor = color;
+        line.setColor(color);
+        reflectLine.setColor(color);
+        circleOne.setColor(color);
+        circleOneMiddle.setColor(color);
+        applyOpacity();
+    }
+
+    public void setGuideOpacity(int opacityPercent) {
+        this.opacityPercent = opacityPercent;
+        applyOpacity();
+    }
+
+    private void applyOpacity() {
+        int mainAlpha = (int) (opacityPercent * 2.55f);
+        line.setAlpha(mainAlpha);
+        reflectLine.setAlpha(mainAlpha);
+        circleOne.setAlpha(mainAlpha);
+        circleOneMiddle.setAlpha(mainAlpha);
+        circleOneMiddleBorder.setAlpha(mainAlpha);
+        circleOneAuxTop.setAlpha((int) (opacityPercent * 2.55f * 0.38f));
+        circleOneAuxBottom.setAlpha((int) (opacityPercent * 2.55f * 0.38f));
+        circleTwo.setAlpha(mainAlpha);
+        circleAuxControls.setAlpha((int) (opacityPercent * 2.55f * 0.38f));
+        circleAuxControlTop.setAlpha(mainAlpha);
+        circleAuxControlBottom.setAlpha(mainAlpha);
+        circleAuxControlLeft.setAlpha(mainAlpha);
+        circleAuxControlRight.setAlpha(mainAlpha);
+        invalidate();
+    }
 }

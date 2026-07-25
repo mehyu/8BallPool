@@ -278,7 +278,7 @@
                 android:layout_height="32dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="4dp">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -307,6 +307,97 @@
                     android:layout_height="match_parent"
                     android:textSize="11sp"
                     android:text="+" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Step Size:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp" />
+                <Button
+                    android:id="@+id/btn_step_1"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:textSize="10sp"
+                    android:text="1px" />
+                <Button
+                    android:id="@+id/btn_step_5"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:textSize="10sp"
+                    android:text="5px" />
+                <Button
+                    android:id="@+id/btn_step_20"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
+                    android:textSize="10sp"
+                    android:text="20px" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Opacity:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp" />
+                <Button
+                    android:id="@+id/btn_dec_opacity"
+                    android:layout_width="35dp"
+                    android:layout_height="match_parent"
+                    android:textSize="11sp"
+                    android:text="-" />
+                <TextView
+                    android:id="@+id/txt_opacity"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="100%"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="11sp" />
+                <Button
+                    android:id="@+id/btn_inc_opacity"
+                    android:layout_width="35dp"
+                    android:layout_height="match_parent"
+                    android:textSize="11sp"
+                    android:text="+" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:text="Line Color:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp" />
+                <Button
+                    android:id="@+id/btn_cycle_color"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.8"
+                    android:textSize="10sp"
+                    android:text="WHITE" />
             </LinearLayout>
 
             <LinearLayout

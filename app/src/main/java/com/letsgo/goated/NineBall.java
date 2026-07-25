@@ -89,4 +89,27 @@ public class NineBall extends View {
         xEndLine = xEnd;
         yEndLine = yEnd;
     }
+
+    private int customColor = Color.WHITE;
+    private int opacityPercent = 100;
+
+    public void setGuideColor(int color) {
+        this.customColor = color;
+        line.setColor(color);
+        circleOne.setColor(color);
+        applyOpacity();
+    }
+
+    public void setGuideOpacity(int opacityPercent) {
+        this.opacityPercent = opacityPercent;
+        applyOpacity();
+    }
+
+    private void applyOpacity() {
+        int mainAlpha = (int) (opacityPercent * 2.55f);
+        line.setAlpha(mainAlpha);
+        circleOne.setAlpha(mainAlpha);
+        circleTwo.setAlpha(mainAlpha);
+        invalidate();
+    }
 }

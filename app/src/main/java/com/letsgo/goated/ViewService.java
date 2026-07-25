@@ -53,8 +53,16 @@ public class ViewService extends Service {
 
     private SharedPreferences prefs;
     private int boardWidth, boardHeight, canvasWidth, canvasHeight, canvasMarginTop;
+    private int stepSize = 5;
+    private int opacityPercent = 100;
+    private int colorIndex = 0;
+    private final int[] colors = {0xFFFFFFFF, 0xFFFF0000, 0xFF00FF00, 0xFF0000FF, 0xFFFFE000, 0xFFFF00FF};
+    private final String[] colorNames = {"WHITE", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA"};
+
     private LinearLayout layoutAdjustPanel;
-    private TextView txtBoardW, txtBoardH, txtCanvasW, txtCanvasH, txtMargin;
+    private TextView txtBoardW, txtBoardH, txtCanvasW, txtCanvasH, txtMargin, txtOpacity;
+    private Button btnCycleColor;
+    private Button btnStep1, btnStep5, btnStep20;
 
     public ViewService() {}
 
@@ -70,6 +78,9 @@ public class ViewService extends Service {
         canvasWidth = prefs.getInt("canvasWidth", (int) getResources().getDimension(R.dimen.canvasWidth));
         canvasHeight = prefs.getInt("canvasHeight", (int) getResources().getDimension(R.dimen.canvasHeight));
         canvasMarginTop = prefs.getInt("canvasMarginTop", (int) getResources().getDimension(R.dimen.canvasMarginTop));
+        stepSize = prefs.getInt("stepSize", 5);
+        opacityPercent = prefs.getInt("opacityPercent", 100);
+        colorIndex = prefs.getInt("colorIndex", 0);
     }
 
     private void saveDimensions() {
@@ -79,6 +90,9 @@ public class ViewService extends Service {
         editor.putInt("canvasWidth", canvasWidth);
         editor.putInt("canvasHeight", canvasHeight);
         editor.putInt("canvasMarginTop", canvasMarginTop);
+        editor.putInt("stepSize", stepSize);
+        editor.putInt("opacityPercent", opacityPercent);
+        editor.putInt("colorIndex", colorIndex);
         editor.apply();
     }
 
@@ -88,8 +102,13 @@ public class ViewService extends Service {
         canvasWidth = (int) getResources().getDimension(R.dimen.canvasWidth);
         canvasHeight = (int) getResources().getDimension(R.dimen.canvasHeight);
         canvasMarginTop = (int) getResources().getDimension(R.dimen.canvasMarginTop);
+        stepSize = 5;
+        opacityPercent = 100;
+        colorIndex = 0;
         saveDimensions();
         updateOverlayDimensions();
+        updateGuidelinesProperties();
+        updateStepButtonStyles();
     }
 
     private void updateOverlayDimensions() {
@@ -111,6 +130,26 @@ public class ViewService extends Service {
         txtMargin.setText(String.valueOf(canvasMarginTop));
     }
 
+    private void updateGuidelinesProperties() {
+        int activeColor = colors[colorIndex];
+        normal.setGuideColor(activeColor);
+        trickshot.setGuideColor(activeColor);
+        nineBall.setGuideColor(activeColor);
+
+        normal.setGuideOpacity(opacityPercent);
+        trickshot.setGuideOpacity(opacityPercent);
+        nineBall.setGuideOpacity(opacityPercent);
+
+        txtOpacity.setText(opacityPercent + "%");
+        btnCycleColor.setText(colorNames[colorIndex]);
+    }
+
+    private void updateStepButtonStyles() {
+        btnStep1.setTextColor(stepSize == 1 ? 0xFF00FF00 : 0xFFFFFFFF);
+        btnStep5.setTextColor(stepSize == 5 ? 0xFF00FF00 : 0xFFFFFFFF);
+        btnStep20.setTextColor(stepSize == 20 ? 0xFF00FF00 : 0xFFFFFFFF);
+    }
+
     private void updateCanvasParams(View canvasView) {
         RelativeLayout.LayoutParams canvasParams = (RelativeLayout.LayoutParams) canvasView.getLayoutParams();
         if (canvasParams != null) {
@@ -121,21 +160,22 @@ public class ViewService extends Service {
         }
     }
 
-    private void setupAdjustmentButton(int buttonId, final int delta, final String type) {
+    private void setupAdjustmentButton(int buttonId, final int direction, final String type) {
         view.findViewById(buttonId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mediaPlayer.start();
+                int actualDelta = direction * stepSize;
                 if (type.equals("board_w")) {
-                    boardWidth += delta;
+                    boardWidth += actualDelta;
                 } else if (type.equals("board_h")) {
-                    boardHeight += delta;
+                    boardHeight += actualDelta;
                 } else if (type.equals("canvas_w")) {
-                    canvasWidth += delta;
+                    canvasWidth += actualDelta;
                 } else if (type.equals("canvas_h")) {
-                    canvasHeight += delta;
+                    canvasHeight += actualDelta;
                 } else if (type.equals("margin")) {
-                    canvasMarginTop += delta;
+                    canvasMarginTop += actualDelta;
                 }
                 updateOverlayDimensions();
             }
@@ -177,8 +217,15 @@ public class ViewService extends Service {
         txtCanvasW = view.findViewById(R.id.txt_canvas_w);
         txtCanvasH = view.findViewById(R.id.txt_canvas_h);
         txtMargin = view.findViewById(R.id.txt_margin);
+        txtOpacity = view.findViewById(R.id.txt_opacity);
+        btnCycleColor = view.findViewById(R.id.btn_cycle_color);
+        btnStep1 = view.findViewById(R.id.btn_step_1);
+        btnStep5 = view.findViewById(R.id.btn_step_5);
+        btnStep20 = view.findViewById(R.id.btn_step_20);
 
         updateOverlayDimensions();
+        updateGuidelinesProperties();
+        updateStepButtonStyles();
 
         Button btnAdjust = view.findViewById(R.id.btn_adjust);
         btnAdjust.setOnClickListener(new View.OnClickListener() {
@@ -193,16 +240,74 @@ public class ViewService extends Service {
             }
         });
 
-        setupAdjustmentButton(R.id.btn_dec_board_w, -5, "board_w");
-        setupAdjustmentButton(R.id.btn_inc_board_w, 5, "board_w");
-        setupAdjustmentButton(R.id.btn_dec_board_h, -5, "board_h");
-        setupAdjustmentButton(R.id.btn_inc_board_h, 5, "board_h");
-        setupAdjustmentButton(R.id.btn_dec_canvas_w, -5, "canvas_w");
-        setupAdjustmentButton(R.id.btn_inc_canvas_w, 5, "canvas_w");
-        setupAdjustmentButton(R.id.btn_dec_canvas_h, -5, "canvas_h");
-        setupAdjustmentButton(R.id.btn_inc_canvas_h, 5, "canvas_h");
-        setupAdjustmentButton(R.id.btn_dec_margin, -5, "margin");
-        setupAdjustmentButton(R.id.btn_inc_margin, 5, "margin");
+        setupAdjustmentButton(R.id.btn_dec_board_w, -1, "board_w");
+        setupAdjustmentButton(R.id.btn_inc_board_w, 1, "board_w");
+        setupAdjustmentButton(R.id.btn_dec_board_h, -1, "board_h");
+        setupAdjustmentButton(R.id.btn_inc_board_h, 1, "board_h");
+        setupAdjustmentButton(R.id.btn_dec_canvas_w, -1, "canvas_w");
+        setupAdjustmentButton(R.id.btn_inc_canvas_w, 1, "canvas_w");
+        setupAdjustmentButton(R.id.btn_dec_canvas_h, -1, "canvas_h");
+        setupAdjustmentButton(R.id.btn_inc_canvas_h, 1, "canvas_h");
+        setupAdjustmentButton(R.id.btn_dec_margin, -1, "margin");
+        setupAdjustmentButton(R.id.btn_inc_margin, 1, "margin");
+
+        btnStep1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                stepSize = 1;
+                updateStepButtonStyles();
+            }
+        });
+
+        btnStep5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                stepSize = 5;
+                updateStepButtonStyles();
+            }
+        });
+
+        btnStep20.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                stepSize = 20;
+                updateStepButtonStyles();
+            }
+        });
+
+        view.findViewById(R.id.btn_dec_opacity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                if (opacityPercent > 10) {
+                    opacityPercent -= 10;
+                    updateGuidelinesProperties();
+                }
+            }
+        });
+
+        view.findViewById(R.id.btn_inc_opacity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                if (opacityPercent < 100) {
+                    opacityPercent += 10;
+                    updateGuidelinesProperties();
+                }
+            }
+        });
+
+        btnCycleColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                colorIndex = (colorIndex + 1) % colors.length;
+                updateGuidelinesProperties();
+            }
+        });
 
         view.findViewById(R.id.btn_toggle_guide).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,9 +315,9 @@ public class ViewService extends Service {
                 mediaPlayer.start();
                 isGuideVisible = !isGuideVisible;
                 if (isGuideVisible) {
-                    board.setBackgroundColor(0x60FFFFFF); // #60FFFFFF (colorAlphaWhite)
+                    board.setBackgroundColor(0x60FFFFFF);
                 } else {
-                    board.setBackgroundColor(0x00000000); // transparent
+                    board.setBackgroundColor(0x00000000);
                 }
             }
         });
