@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         tools:ignore="UselessParent">
 
-        <app.hack.eightballpool.Normal
+        <com.letsgo.goated.Normal
             android:id="@+id/normal"
             android:layout_width="@dimen/canvasWidth"
             android:layout_height="@dimen/canvasHeight"
@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:visibility="gone" />
 
-        <app.hack.eightballpool.Trickshot
+        <com.letsgo.goated.Trickshot
             android:id="@+id/trickshot"
             android:layout_width="@dimen/canvasWidth"
             android:layout_height="@dimen/canvasHeight"
@@ -27,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:visibility="gone" />
 
-        <app.hack.eightballpool.NineBall
+        <com.letsgo.goated.NineBall
             android:id="@+id/nineBall"
             android:layout_width="@dimen/canvasWidth"
             android:layout_height="@dimen/canvasHeight"

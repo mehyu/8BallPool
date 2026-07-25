@@ -1,4 +1,4 @@
-package app.hack.eightballpool;
+package com.letsgo.goated;
 
 import android.app.Application;
 import android.app.NotificationChannel;

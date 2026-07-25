@@ -1,4 +1,4 @@
-package app.hack.eightballpool;
+package com.letsgo.goated;
 
 import androidx.appcompat.app.AppCompatActivity;
 

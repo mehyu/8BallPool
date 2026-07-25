@@ -1,4 +1,4 @@
-package app.hack.eightballpool;
+package com.letsgo.goated;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

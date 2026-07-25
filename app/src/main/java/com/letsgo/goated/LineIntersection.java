@@ -1,4 +1,4 @@
-package app.hack.eightballpool;
+package com.letsgo.goated;
 
 public class LineIntersection {
     public float endX;

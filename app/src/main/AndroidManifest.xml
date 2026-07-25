@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name="app.hack.eightballpool.App"
+        android:name="com.letsgo.goated.App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name="app.hack.eightballpool.MainActivity" android:exported="true" tools:ignore="Instantiatable">
+        <activity android:name="com.letsgo.goated.MainActivity" android:exported="true" tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name="app.hack.eightballpool.ViewService"
+            android:name="com.letsgo.goated.ViewService"
             android:enabled="true"
             android:exported="false"
             android:visibleToInstantApps="false" />

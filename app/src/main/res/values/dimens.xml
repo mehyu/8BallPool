@@ -21,19 +21,19 @@
     -->
 
     <!-- Board -->
-    <dimen name="boardWidth" tools:ignore="PxUsage">1620px</dimen>
-    <dimen name="boardHeight" tools:ignore="PxUsage">897px</dimen>
-    <dimen name="boardMarginBottom" tools:ignore="PxUsage">0.0099px</dimen>
+    <dimen name="boardWidth" tools:ignore="PxUsage">1350px</dimen>
+    <dimen name="boardHeight" tools:ignore="PxUsage">598px</dimen>
+    <dimen name="boardMarginBottom" tools:ignore="PxUsage">0.0066px</dimen>
 
     <!-- Canvas -->
-    <dimen name="canvasWidth" tools:ignore="PxUsage">1458px</dimen>
-    <dimen name="canvasHeight" tools:ignore="PxUsage">731px</dimen>
-    <dimen name="canvasMarginTop" tools:ignore="PxUsage">82px</dimen>
+    <dimen name="canvasWidth" tools:ignore="PxUsage">1215px</dimen>
+    <dimen name="canvasHeight" tools:ignore="PxUsage">487px</dimen>
+    <dimen name="canvasMarginTop" tools:ignore="PxUsage">55px</dimen>
 
     <!-- Buttons -->
-    <dimen name="buttonWidth" tools:ignore="PxUsage">280px</dimen>
-    <dimen name="buttonHeight" tools:ignore="PxUsage">75px</dimen>
-    <dimen name="buttonNormalMarginStart" tools:ignore="PxUsage">175px</dimen>
-    <dimen name="buttonCloseMarginEnd" tools:ignore="PxUsage">170px</dimen>
-    <dimen name="buttonTrickshotSecondLineMarginEnd" tools:ignore="PxUsage">170px</dimen>
+    <dimen name="buttonWidth" tools:ignore="PxUsage">233px</dimen>
+    <dimen name="buttonHeight" tools:ignore="PxUsage">50px</dimen>
+    <dimen name="buttonNormalMarginStart" tools:ignore="PxUsage">146px</dimen>
+    <dimen name="buttonCloseMarginEnd" tools:ignore="PxUsage">142px</dimen>
+    <dimen name="buttonTrickshotSecondLineMarginEnd" tools:ignore="PxUsage">142px</dimen>
 </resources>
