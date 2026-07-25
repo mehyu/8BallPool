@@ -22,6 +22,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.view.ViewGroup;
+import android.content.SharedPreferences;
 
 import androidx.core.app.NotificationCompat;
 
@@ -46,11 +50,95 @@ public class ViewService extends Service {
 
     boolean secondLine = false;
 
+    private SharedPreferences prefs;
+    private int boardWidth, boardHeight, canvasWidth, canvasHeight, canvasMarginTop;
+    private LinearLayout layoutAdjustPanel;
+    private TextView txtBoardW, txtBoardH, txtCanvasW, txtCanvasH, txtMargin;
+
     public ViewService() {}
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void loadDimensions() {
+        prefs = getSharedPreferences("StealthPrefs", MODE_PRIVATE);
+        boardWidth = prefs.getInt("boardWidth", (int) getResources().getDimension(R.dimen.boardWidth));
+        boardHeight = prefs.getInt("boardHeight", (int) getResources().getDimension(R.dimen.boardHeight));
+        canvasWidth = prefs.getInt("canvasWidth", (int) getResources().getDimension(R.dimen.canvasWidth));
+        canvasHeight = prefs.getInt("canvasHeight", (int) getResources().getDimension(R.dimen.canvasHeight));
+        canvasMarginTop = prefs.getInt("canvasMarginTop", (int) getResources().getDimension(R.dimen.canvasMarginTop));
+    }
+
+    private void saveDimensions() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("boardWidth", boardWidth);
+        editor.putInt("boardHeight", boardHeight);
+        editor.putInt("canvasWidth", canvasWidth);
+        editor.putInt("canvasHeight", canvasHeight);
+        editor.putInt("canvasMarginTop", canvasMarginTop);
+        editor.apply();
+    }
+
+    private void resetDimensions() {
+        boardWidth = (int) getResources().getDimension(R.dimen.boardWidth);
+        boardHeight = (int) getResources().getDimension(R.dimen.boardHeight);
+        canvasWidth = (int) getResources().getDimension(R.dimen.canvasWidth);
+        canvasHeight = (int) getResources().getDimension(R.dimen.canvasHeight);
+        canvasMarginTop = (int) getResources().getDimension(R.dimen.canvasMarginTop);
+        saveDimensions();
+        updateOverlayDimensions();
+    }
+
+    private void updateOverlayDimensions() {
+        ViewGroup.LayoutParams boardParams = board.getLayoutParams();
+        if (boardParams != null) {
+            boardParams.width = boardWidth;
+            boardParams.height = boardHeight;
+            board.setLayoutParams(boardParams);
+        }
+
+        updateCanvasParams(normal);
+        updateCanvasParams(trickshot);
+        updateCanvasParams(nineBall);
+
+        txtBoardW.setText(String.valueOf(boardWidth));
+        txtBoardH.setText(String.valueOf(boardHeight));
+        txtCanvasW.setText(String.valueOf(canvasWidth));
+        txtCanvasH.setText(String.valueOf(canvasHeight));
+        txtMargin.setText(String.valueOf(canvasMarginTop));
+    }
+
+    private void updateCanvasParams(View canvasView) {
+        RelativeLayout.LayoutParams canvasParams = (RelativeLayout.LayoutParams) canvasView.getLayoutParams();
+        if (canvasParams != null) {
+            canvasParams.width = canvasWidth;
+            canvasParams.height = canvasHeight;
+            canvasParams.topMargin = canvasMarginTop;
+            canvasView.setLayoutParams(canvasParams);
+        }
+    }
+
+    private void setupAdjustmentButton(int buttonId, final int delta, final String type) {
+        view.findViewById(buttonId).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                if (type.equals("board_w")) {
+                    boardWidth += delta;
+                } else if (type.equals("board_h")) {
+                    boardHeight += delta;
+                } else if (type.equals("canvas_w")) {
+                    canvasWidth += delta;
+                } else if (type.equals("canvas_h")) {
+                    canvasHeight += delta;
+                } else if (type.equals("margin")) {
+                    canvasMarginTop += delta;
+                }
+                updateOverlayDimensions();
+            }
+        });
     }
 
     @SuppressLint("InflateParams")
@@ -80,6 +168,66 @@ public class ViewService extends Service {
         btn_nineBall.setOnClickListener(showNineBall);
         btn_hide.setOnClickListener(hide);
 
+        loadDimensions();
+
+        layoutAdjustPanel = view.findViewById(R.id.layout_adjust_panel);
+        txtBoardW = view.findViewById(R.id.txt_board_w);
+        txtBoardH = view.findViewById(R.id.txt_board_h);
+        txtCanvasW = view.findViewById(R.id.txt_canvas_w);
+        txtCanvasH = view.findViewById(R.id.txt_canvas_h);
+        txtMargin = view.findViewById(R.id.txt_margin);
+
+        updateOverlayDimensions();
+
+        Button btnAdjust = view.findViewById(R.id.btn_adjust);
+        btnAdjust.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                if (layoutAdjustPanel.getVisibility() == View.VISIBLE) {
+                    layoutAdjustPanel.setVisibility(View.GONE);
+                } else {
+                    layoutAdjustPanel.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        setupAdjustmentButton(R.id.btn_dec_board_w, -5, "board_w");
+        setupAdjustmentButton(R.id.btn_inc_board_w, 5, "board_w");
+        setupAdjustmentButton(R.id.btn_dec_board_h, -5, "board_h");
+        setupAdjustmentButton(R.id.btn_inc_board_h, 5, "board_h");
+        setupAdjustmentButton(R.id.btn_dec_canvas_w, -5, "canvas_w");
+        setupAdjustmentButton(R.id.btn_inc_canvas_w, 5, "canvas_w");
+        setupAdjustmentButton(R.id.btn_dec_canvas_h, -5, "canvas_h");
+        setupAdjustmentButton(R.id.btn_inc_canvas_h, 5, "canvas_h");
+        setupAdjustmentButton(R.id.btn_dec_margin, -5, "margin");
+        setupAdjustmentButton(R.id.btn_inc_margin, 5, "margin");
+
+        view.findViewById(R.id.btn_save_config).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                saveDimensions();
+                layoutAdjustPanel.setVisibility(View.GONE);
+            }
+        });
+
+        view.findViewById(R.id.btn_reset_config).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                resetDimensions();
+            }
+        });
+
+        view.findViewById(R.id.btn_close_panel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.start();
+                layoutAdjustPanel.setVisibility(View.GONE);
+            }
+        });
+
         layoutParams();
         sensorManager();
     }
@@ -91,8 +239,8 @@ public class ViewService extends Service {
 
         btn_trickshot_second_line.setVisibility(View.GONE);
 
-        float widthCanvas = (int) getResources().getDimension(R.dimen.canvasWidth);
-        float heightCanvas = (int) getResources().getDimension(R.dimen.canvasHeight);
+        float widthCanvas = canvasWidth;
+        float heightCanvas = canvasHeight;
 
         normal.setPositionCircle((widthCanvas / 2f), (heightCanvas / 2f));
         normal.setRotation(0);
@@ -105,8 +253,8 @@ public class ViewService extends Service {
 
         btn_trickshot_second_line.setVisibility(View.VISIBLE);
 
-        float widthCanvas = (int) getResources().getDimension(R.dimen.canvasWidth);
-        float heightCanvas = (int) getResources().getDimension(R.dimen.canvasHeight);
+        float widthCanvas = canvasWidth;
+        float heightCanvas = canvasHeight;
 
         // Bug fix
         trickshot.resetLines();
@@ -135,8 +283,8 @@ public class ViewService extends Service {
 
         btn_trickshot_second_line.setVisibility(View.GONE);
 
-        float widthCanvas = (int) getResources().getDimension(R.dimen.canvasWidth);
-        float heightCanvas = (int) getResources().getDimension(R.dimen.canvasHeight);
+        float widthCanvas = canvasWidth;
+        float heightCanvas = canvasHeight;
 
         // Start line
         float left = widthCanvas - 327;
