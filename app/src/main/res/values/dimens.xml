@@ -21,14 +21,14 @@
     -->
 
     <!-- Board -->
-    <dimen name="boardWidth" tools:ignore="PxUsage">1350px</dimen>
-    <dimen name="boardHeight" tools:ignore="PxUsage">598px</dimen>
-    <dimen name="boardMarginBottom" tools:ignore="PxUsage">0.0066px</dimen>
+    <dimen name="boardWidth" tools:ignore="PxUsage">1079px</dimen>
+    <dimen name="boardHeight" tools:ignore="PxUsage">594px</dimen>
+    <dimen name="boardMarginBottom" tools:ignore="PxUsage">0px</dimen>
 
     <!-- Canvas -->
-    <dimen name="canvasWidth" tools:ignore="PxUsage">1215px</dimen>
-    <dimen name="canvasHeight" tools:ignore="PxUsage">487px</dimen>
-    <dimen name="canvasMarginTop" tools:ignore="PxUsage">55px</dimen>
+    <dimen name="canvasWidth" tools:ignore="PxUsage">1009px</dimen>
+    <dimen name="canvasHeight" tools:ignore="PxUsage">458px</dimen>
+    <dimen name="canvasMarginTop" tools:ignore="PxUsage">115px</dimen>
 
     <!-- Buttons -->
     <dimen name="buttonWidth" tools:ignore="PxUsage">233px</dimen>
