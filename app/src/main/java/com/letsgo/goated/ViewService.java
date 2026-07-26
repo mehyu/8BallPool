@@ -143,9 +143,15 @@ public class ViewService extends Service {
             board.setLayoutParams(boardParams);
         }
 
-        updateCanvasParams(normal);
-        updateCanvasParams(trickshot);
-        updateCanvasParams(nineBall);
+        if (normal != null) {
+            normal.setCanvasDimensions(canvasWidth, canvasHeight, canvasMarginTop);
+        }
+        if (trickshot != null) {
+            trickshot.setCanvasDimensions(canvasWidth, canvasHeight, canvasMarginTop);
+        }
+        if (nineBall != null) {
+            nineBall.setCanvasDimensions(canvasWidth, canvasHeight, canvasMarginTop);
+        }
 
         txtBoardW.setText(String.valueOf(boardWidth));
         txtBoardH.setText(String.valueOf(boardHeight));
@@ -394,10 +400,10 @@ public class ViewService extends Service {
 
         btn_trickshot_second_line.setVisibility(View.GONE);
 
-        float widthCanvas = canvasWidth;
-        float heightCanvas = canvasHeight;
+        float centerX = boardWidth / 2f;
+        float centerY = canvasMarginTop + canvasHeight / 2f;
 
-        normal.setPositionCircle((widthCanvas / 2f), (heightCanvas / 2f));
+        normal.setPositionCircle(centerX, centerY);
         normal.setRotation(0);
     }
 
@@ -408,16 +414,16 @@ public class ViewService extends Service {
 
         btn_trickshot_second_line.setVisibility(View.VISIBLE);
 
-        float widthCanvas = canvasWidth;
-        float heightCanvas = canvasHeight;
+        float centerX = boardWidth / 2f;
+        float centerY = canvasMarginTop + canvasHeight / 2f;
 
         // Bug fix
         trickshot.resetLines();
 
-        trickshot.setPositionCircleOne((widthCanvas / 2f) - 200, (heightCanvas / 2f));
-        trickshot.setPositionCircleTwo((widthCanvas / 2f) + 200, (heightCanvas / 2f));
+        trickshot.setPositionCircleOne(centerX - 200, centerY);
+        trickshot.setPositionCircleTwo(centerX + 200, centerY);
 
-        trickshot.setPositionControls(widthCanvas - 200, 200);
+        trickshot.setPositionControls(boardWidth - 200, 200);
         trickshot.setRotation(0);
     }
 
@@ -438,19 +444,19 @@ public class ViewService extends Service {
 
         btn_trickshot_second_line.setVisibility(View.GONE);
 
-        float widthCanvas = canvasWidth;
-        float heightCanvas = canvasHeight;
+        float centerX = boardWidth / 2f;
+        float centerY = canvasMarginTop + canvasHeight / 2f;
 
         // Start line
-        float left = widthCanvas - 327;
-        float top = heightCanvas - 300;
+        float left = ((boardWidth + canvasWidth) / 2f) - 327;
+        float top = canvasMarginTop + canvasHeight - 300;
 
         // End line
-        float right = widthCanvas - 290;
-        float bottom = heightCanvas - 282.5f;
+        float right = ((boardWidth + canvasWidth) / 2f) - 290;
+        float bottom = canvasMarginTop + canvasHeight - 282.5f;
 
-        nineBall.setPositionCircleOne((widthCanvas / 2f) + 345.5f, (heightCanvas / 2f) + 39f);
-        nineBall.setPositionCircleTwo((widthCanvas / 2f) - 254, (heightCanvas / 2f) - 136.5f);
+        nineBall.setPositionCircleOne(centerX + 345.5f, centerY + 39f);
+        nineBall.setPositionCircleTwo(centerX - 254, centerY - 136.5f);
 
         nineBall.setPositionLine(left, top, right, bottom);
         nineBall.setRotation(0);

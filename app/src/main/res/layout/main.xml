@@ -13,26 +13,20 @@
 
         <com.letsgo.goated.Normal
             android:id="@+id/normal"
-            android:layout_width="@dimen/canvasWidth"
-            android:layout_height="@dimen/canvasHeight"
-            android:layout_marginTop="@dimen/canvasMarginTop"
-            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone" />
 
         <com.letsgo.goated.Trickshot
             android:id="@+id/trickshot"
-            android:layout_width="@dimen/canvasWidth"
-            android:layout_height="@dimen/canvasHeight"
-            android:layout_marginTop="@dimen/canvasMarginTop"
-            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone" />
 
         <com.letsgo.goated.NineBall
             android:id="@+id/nineBall"
-            android:layout_width="@dimen/canvasWidth"
-            android:layout_height="@dimen/canvasHeight"
-            android:layout_marginTop="@dimen/canvasMarginTop"
-            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone" />
 
         <Button

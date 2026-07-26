@@ -112,4 +112,15 @@ public class NineBall extends View {
         circleTwo.setAlpha(mainAlpha);
         invalidate();
     }
+
+    private int canvasWidth = 1009;
+    private int canvasHeight = 458;
+    private int canvasMarginTop = 115;
+
+    public void setCanvasDimensions(int width, int height, int marginTop) {
+        this.canvasWidth = width;
+        this.canvasHeight = height;
+        this.canvasMarginTop = marginTop;
+        invalidate();
+    }
 }

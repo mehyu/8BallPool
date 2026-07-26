@@ -56,6 +56,17 @@ public class Trickshot extends View {
 
     boolean showSecondLine = false;
 
+    private int canvasWidth = 1009;
+    private int canvasHeight = 458;
+    private int canvasMarginTop = 115;
+
+    public void setCanvasDimensions(int width, int height, int marginTop) {
+        this.canvasWidth = width;
+        this.canvasHeight = height;
+        this.canvasMarginTop = marginTop;
+        invalidate();
+    }
+
     public Trickshot(Context context) {
         super(context);
 
@@ -288,27 +299,32 @@ public class Trickshot extends View {
 
                     touchedTheWall = false;
 
+                    float minX = (getWidth() - canvasWidth) / 2f + radiusBall;
+                    float maxX = (getWidth() + canvasWidth) / 2f - radiusBall;
+                    float minY = canvasMarginTop + radiusBall;
+                    float maxY = canvasMarginTop + canvasHeight - radiusBall;
+
                     // Top
-                    if (yOnMotion < radiusBall) {
-                        yCircleTwo = radiusBall;
+                    if (yOnMotion < minY) {
+                        yCircleTwo = minY;
                         touchedTheWall = true;
                     }
 
                     // Bottom
-                    if (yOnMotion > (getHeight() - radiusBall)) {
-                        yCircleTwo = getHeight() - radiusBall;
+                    if (yOnMotion > maxY) {
+                        yCircleTwo = maxY;
                         touchedTheWall = true;
                     }
 
                     // Left
-                    if (xOnMotion < radiusBall) {
-                        xCircleTwo = radiusBall;
+                    if (xOnMotion < minX) {
+                        xCircleTwo = minX;
                         touchedTheWall = true;
                     }
 
                     // Right
-                    if (xOnMotion > (getWidth() - radiusBall)) {
-                        xCircleTwo = getWidth() - radiusBall;
+                    if (xOnMotion > maxX) {
+                        xCircleTwo = maxX;
                         touchedTheWall = true;
                     }
                 }
@@ -497,26 +513,31 @@ public class Trickshot extends View {
             xCircleAuxControlRight = xCircleAuxControls + 140;
         }
 
-        if (xCircleOne < radiusBall) {
-            xCircleOne = radiusBall;
+        float minX = (getWidth() - canvasWidth) / 2f + radiusBall;
+        float maxX = (getWidth() + canvasWidth) / 2f - radiusBall;
+        float minY = canvasMarginTop + radiusBall;
+        float maxY = canvasMarginTop + canvasHeight - radiusBall;
+
+        if (xCircleOne < minX) {
+            xCircleOne = minX;
             xCircleOneAuxTop = xCircleOne + 110;
             yCircleOneAuxTop = yCircleOne - 140;
         }
 
-        if (yCircleOne < radiusBall) {
-            yCircleOne = radiusBall;
+        if (yCircleOne < minY) {
+            yCircleOne = minY;
             xCircleOneAuxBottom = xCircleOne - 110;
             yCircleOneAuxBottom = yCircleOne + 140;
         }
 
-        if (xCircleOne > (getWidth() - radiusBall)) {
-            xCircleOne = getWidth() - radiusBall;
+        if (xCircleOne > maxX) {
+            xCircleOne = maxX;
             xCircleOneAuxBottom = xCircleOne - 110;
             yCircleOneAuxBottom = yCircleOne + 140;
         }
 
-        if (yCircleOne > (getHeight() - radiusBall)) {
-            yCircleOne = getHeight() - radiusBall;
+        if (yCircleOne > maxY) {
+            yCircleOne = maxY;
             xCircleOneAuxTop = xCircleOne + 110;
             yCircleOneAuxTop = yCircleOne - 140;
         }

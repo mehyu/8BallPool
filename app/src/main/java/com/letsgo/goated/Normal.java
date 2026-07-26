@@ -67,6 +67,17 @@ public class Normal extends View {
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    private int canvasWidth = 1009;
+    private int canvasHeight = 458;
+    private int canvasMarginTop = 115;
+
+    public void setCanvasDimensions(int width, int height, int marginTop) {
+        this.canvasWidth = width;
+        this.canvasHeight = height;
+        this.canvasMarginTop = marginTop;
+        invalidate();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -87,24 +98,24 @@ public class Normal extends View {
                 xCircle = xOnMotion;
                 yCircle = yOnMotion;
 
-                // Top
-                if (yCircle < 0) {
-                    yCircle = 0;
+                // Top / Bottom
+                float minY = canvasMarginTop;
+                float maxY = canvasMarginTop + canvasHeight;
+                if (yCircle < minY) {
+                    yCircle = minY;
+                }
+                if (yCircle > maxY) {
+                    yCircle = maxY;
                 }
 
-                // Bottom
-                if (yCircle > getHeight()) {
-                    yCircle = getHeight();
+                // Left / Right
+                float minX = (getWidth() - canvasWidth) / 2f;
+                float maxX = minX + canvasWidth;
+                if (xCircle < minX) {
+                    xCircle = minX;
                 }
-
-                // Left
-                if (xCircle < 0) {
-                    xCircle = 0;
-                }
-
-                // Right
-                if (xCircle > getWidth()) {
-                    xCircle = getWidth();
+                if (xCircle > maxX) {
+                    xCircle = maxX;
                 }
 
                 trackStatus = true;
