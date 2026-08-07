@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.util.DisplayMetrics;
 import android.widget.Button;
@@ -65,7 +66,7 @@ public class ViewService extends Service {
     private final String[] colorNames = {"WHITE", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA"};
 
     private LinearLayout layoutAdjustPanel;
-    private TextView txtBoardW, txtBoardH, txtCanvasW, txtCanvasH, txtMargin, txtOpacity;
+    private TextView txtBoardW, txtBoardH, txtCanvasW, txtCanvasH, txtMargin, txtOpacity, txtPosX, txtPosY;
     private Button btnCycleColor;
     private Button btnStep1, btnStep5, btnStep20;
 
@@ -114,7 +115,16 @@ public class ViewService extends Service {
         stepSize = 5;
         opacityPercent = 100;
         colorIndex = 0;
+        windowX = 100;
+        windowY = 100;
         saveDimensions();
+        if (windowParams != null) {
+            windowParams.x = windowX;
+            windowParams.y = windowY;
+            if (windowManager != null && view != null) {
+                windowManager.updateViewLayout(view, windowParams);
+            }
+        }
         updateOverlayDimensions();
         updateGuidelinesProperties();
         updateStepButtonStyles();
@@ -161,11 +171,13 @@ public class ViewService extends Service {
             nineBall.setCanvasDimensions(canvasWidth, canvasHeight, canvasMarginTop);
         }
 
-        txtBoardW.setText(String.valueOf(boardWidth));
-        txtBoardH.setText(String.valueOf(boardHeight));
-        txtCanvasW.setText(String.valueOf(canvasWidth));
-        txtCanvasH.setText(String.valueOf(canvasHeight));
-        txtMargin.setText(String.valueOf(canvasMarginTop));
+        if (txtBoardW != null) txtBoardW.setText(String.valueOf(boardWidth));
+        if (txtBoardH != null) txtBoardH.setText(String.valueOf(boardHeight));
+        if (txtCanvasW != null) txtCanvasW.setText(String.valueOf(canvasWidth));
+        if (txtCanvasH != null) txtCanvasH.setText(String.valueOf(canvasHeight));
+        if (txtMargin != null) txtMargin.setText(String.valueOf(canvasMarginTop));
+        if (txtPosX != null) txtPosX.setText(String.valueOf(windowX));
+        if (txtPosY != null) txtPosY.setText(String.valueOf(windowY));
     }
 
     private void updateGuidelinesProperties() {
@@ -178,14 +190,14 @@ public class ViewService extends Service {
         trickshot.setGuideOpacity(opacityPercent);
         nineBall.setGuideOpacity(opacityPercent);
 
-        txtOpacity.setText(opacityPercent + "%");
-        btnCycleColor.setText(colorNames[colorIndex]);
+        if (txtOpacity != null) txtOpacity.setText(opacityPercent + "%");
+        if (btnCycleColor != null) btnCycleColor.setText(colorNames[colorIndex]);
     }
 
     private void updateStepButtonStyles() {
-        btnStep1.setTextColor(stepSize == 1 ? 0xFF00FF00 : 0xFFFFFFFF);
-        btnStep5.setTextColor(stepSize == 5 ? 0xFF00FF00 : 0xFFFFFFFF);
-        btnStep20.setTextColor(stepSize == 20 ? 0xFF00FF00 : 0xFFFFFFFF);
+        if (btnStep1 != null) btnStep1.setTextColor(stepSize == 1 ? 0xFF00FF00 : 0xFFFFFFFF);
+        if (btnStep5 != null) btnStep5.setTextColor(stepSize == 5 ? 0xFF00FF00 : 0xFFFFFFFF);
+        if (btnStep20 != null) btnStep20.setTextColor(stepSize == 20 ? 0xFF00FF00 : 0xFFFFFFFF);
     }
 
     private void updateCanvasParams(View canvasView) {
@@ -199,10 +211,12 @@ public class ViewService extends Service {
     }
 
     private void setupAdjustmentButton(int buttonId, final int direction, final String type) {
-        view.findViewById(buttonId).setOnClickListener(new View.OnClickListener() {
+        View btn = view.findViewById(buttonId);
+        if (btn == null) return;
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.start();
+                if (mediaPlayer != null) mediaPlayer.start();
                 int actualDelta = direction * stepSize;
                 if (type.equals("board_w")) {
                     boardWidth += actualDelta;
@@ -214,6 +228,22 @@ public class ViewService extends Service {
                     canvasHeight += actualDelta;
                 } else if (type.equals("margin")) {
                     canvasMarginTop += actualDelta;
+                } else if (type.equals("pos_x")) {
+                    windowX += actualDelta;
+                    if (windowParams != null) {
+                        windowParams.x = windowX;
+                        if (windowManager != null && view != null) {
+                            windowManager.updateViewLayout(view, windowParams);
+                        }
+                    }
+                } else if (type.equals("pos_y")) {
+                    windowY += actualDelta;
+                    if (windowParams != null) {
+                        windowParams.y = windowY;
+                        if (windowManager != null && view != null) {
+                            windowManager.updateViewLayout(view, windowParams);
+                        }
+                    }
                 }
                 updateOverlayDimensions();
             }
@@ -256,6 +286,8 @@ public class ViewService extends Service {
         txtCanvasH = view.findViewById(R.id.txt_canvas_h);
         txtMargin = view.findViewById(R.id.txt_margin);
         txtOpacity = view.findViewById(R.id.txt_opacity);
+        txtPosX = view.findViewById(R.id.txt_pos_x);
+        txtPosY = view.findViewById(R.id.txt_pos_y);
         btnCycleColor = view.findViewById(R.id.btn_cycle_color);
         btnStep1 = view.findViewById(R.id.btn_step_1);
         btnStep5 = view.findViewById(R.id.btn_step_5);
@@ -278,6 +310,10 @@ public class ViewService extends Service {
             }
         });
 
+        setupAdjustmentButton(R.id.btn_dec_pos_x, -1, "pos_x");
+        setupAdjustmentButton(R.id.btn_inc_pos_x, 1, "pos_x");
+        setupAdjustmentButton(R.id.btn_dec_pos_y, -1, "pos_y");
+        setupAdjustmentButton(R.id.btn_inc_pos_y, 1, "pos_y");
         setupAdjustmentButton(R.id.btn_dec_board_w, -1, "board_w");
         setupAdjustmentButton(R.id.btn_inc_board_w, 1, "board_w");
         setupAdjustmentButton(R.id.btn_dec_board_h, -1, "board_h");
