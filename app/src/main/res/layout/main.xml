@@ -29,16 +29,18 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
+        <!-- Calibration Panel (Positioned in upper center to prevent any overlap with bottom control bar) -->
         <LinearLayout
             android:id="@+id/layout_adjust_panel"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:background="#F0000000"
             android:orientation="vertical"
             android:padding="8dp"
+            android:elevation="12dp"
             android:visibility="gone">
 
             <TextView
@@ -53,7 +55,7 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="160dp"
                 android:layout_marginBottom="8dp">
 
                 <LinearLayout
@@ -545,21 +547,22 @@
 
     </RelativeLayout>
 
-    <!-- FLOATING FIXED CONTROL BAR (Will never deform, stretch or overlap!) -->
+    <!-- FLOATING FIXED CONTROL BAR (Docked cleanly at screen bottom) -->
     <LinearLayout
         android:id="@+id/layout_control_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal"
-        android:background="#A0000000"
-        android:padding="4dp">
+        android:background="#C0000000"
+        android:padding="4dp"
+        android:elevation="10dp">
 
         <Button
             android:id="@+id/btn_adjust"
-            android:layout_width="70dp"
-            android:layout_height="36dp"
+            android:layout_width="65dp"
+            android:layout_height="34dp"
             android:background="#80000000"
             android:text="ADJUST"
             android:textColor="#FFFFFF"
@@ -569,8 +572,8 @@
 
         <Button
             android:id="@+id/btn_normal"
-            android:layout_width="70dp"
-            android:layout_height="36dp"
+            android:layout_width="65dp"
+            android:layout_height="34dp"
             android:background="@drawable/button_normal"
             android:text="@string/normal"
             android:textColor="@color/colorWhite"
@@ -580,8 +583,8 @@
 
         <Button
             android:id="@+id/btn_trickshot"
-            android:layout_width="75dp"
-            android:layout_height="36dp"
+            android:layout_width="70dp"
+            android:layout_height="34dp"
             android:background="@drawable/button_trickshot"
             android:text="@string/trickshot"
             android:textColor="@color/colorWhite"
@@ -591,8 +594,8 @@
 
         <Button
             android:id="@+id/btn_nineBall"
-            android:layout_width="70dp"
-            android:layout_height="36dp"
+            android:layout_width="65dp"
+            android:layout_height="34dp"
             android:background="@drawable/button_nineball"
             android:text="@string/nineBall"
             android:textColor="@color/colorWhite"
@@ -602,8 +605,8 @@
 
         <Button
             android:id="@+id/btn_trickshot_second_ine"
-            android:layout_width="85dp"
-            android:layout_height="36dp"
+            android:layout_width="80dp"
+            android:layout_height="34dp"
             android:background="@drawable/button_trickshot_second_line"
             android:text="@string/trickshot_second_line"
             android:textColor="@color/colorWhite"
@@ -614,13 +617,30 @@
 
         <Button
             android:id="@+id/btn_hide"
-            android:layout_width="60dp"
-            android:layout_height="36dp"
+            android:layout_width="55dp"
+            android:layout_height="34dp"
             android:background="@drawable/button_hide"
             android:text="@string/hide"
             android:textColor="@color/colorWhite"
             android:textSize="10sp"
             tools:ignore="ContentDescription,TouchTargetSizeCheck" />
     </LinearLayout>
+
+    <!-- FLOATING UNHIDE BUBBLE (Appears when Hide is clicked so user can restore menu anytime!) -->
+    <Button
+        android:id="@+id/btn_unhide_bubble"
+        android:layout_width="70dp"
+        android:layout_height="34dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#CCFF0000"
+        android:text="SHOW 8B"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="10sp"
+        android:elevation="20dp"
+        android:visibility="gone"
+        tools:ignore="TouchTargetSizeCheck" />
 
 </FrameLayout>

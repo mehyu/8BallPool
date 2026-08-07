@@ -65,7 +65,8 @@ public class ViewService extends Service {
     private final int[] colors = {0xFFFFFFFF, 0xFFFF0000, 0xFF00FF00, 0xFF0000FF, 0xFFFFE000, 0xFFFF00FF};
     private final String[] colorNames = {"WHITE", "RED", "GREEN", "BLUE", "YELLOW", "MAGENTA"};
 
-    private LinearLayout layoutAdjustPanel;
+    private LinearLayout layoutAdjustPanel, layoutControlBar;
+    private Button btnUnhideBubble;
     private TextView txtBoardW, txtBoardH, txtCanvasW, txtCanvasH, txtMargin, txtOpacity, txtPosX, txtPosY;
     private Button btnCycleColor;
     private Button btnStep1, btnStep5, btnStep20;
@@ -280,6 +281,11 @@ public class ViewService extends Service {
         loadDimensions();
 
         layoutAdjustPanel = view.findViewById(R.id.layout_adjust_panel);
+        layoutControlBar = view.findViewById(R.id.layout_control_bar);
+        btnUnhideBubble = view.findViewById(R.id.btn_unhide_bubble);
+        if (btnUnhideBubble != null) {
+            btnUnhideBubble.setOnClickListener(unhide);
+        }
         txtBoardW = view.findViewById(R.id.txt_board_w);
         txtBoardH = view.findViewById(R.id.txt_board_h);
         txtCanvasW = view.findViewById(R.id.txt_canvas_w);
@@ -432,7 +438,10 @@ public class ViewService extends Service {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (!isGuideVisible) return false;
+                // Box drag moving ONLY works when the ADJUST menu is open!
+                if (layoutAdjustPanel == null || layoutAdjustPanel.getVisibility() != View.VISIBLE) {
+                    return false;
+                }
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -586,8 +595,21 @@ public class ViewService extends Service {
     private final View.OnClickListener hide = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mediaPlayer.start();
+            if (mediaPlayer != null) mediaPlayer.start();
             board.setVisibility(View.GONE);
+            if (layoutControlBar != null) layoutControlBar.setVisibility(View.GONE);
+            if (layoutAdjustPanel != null) layoutAdjustPanel.setVisibility(View.GONE);
+            if (btnUnhideBubble != null) btnUnhideBubble.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private final View.OnClickListener unhide = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mediaPlayer != null) mediaPlayer.start();
+            board.setVisibility(View.VISIBLE);
+            if (layoutControlBar != null) layoutControlBar.setVisibility(View.VISIBLE);
+            if (btnUnhideBubble != null) btnUnhideBubble.setVisibility(View.GONE);
         }
     };
 
