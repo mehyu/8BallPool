@@ -653,4 +653,46 @@ public class Trickshot extends View {
         circleAuxControlRight.setAlpha(mainAlpha);
         invalidate();
     }
+
+    public void resetLines() {
+        showSecondLine = false;
+        touchedTheWall = false;
+        invalidate();
+    }
+
+    public void secondLine(boolean show) {
+        this.showSecondLine = show;
+        invalidate();
+    }
+
+    public void setPositionCircleOne(float x, float y) {
+        this.xCircleOne = x;
+        this.yCircleOne = y;
+        invalidate();
+    }
+
+    public void setPositionCircleTwo(float x, float y) {
+        this.xCircleTwo = x;
+        this.yCircleTwo = y;
+        invalidate();
+    }
+
+    public void setPositionControls(float x, float y) {
+        this.xCircleAuxControls = x;
+        this.yCircleAuxControls = y;
+
+        this.xCircleAuxControlTop = xCircleAuxControls;
+        this.yCircleAuxControlTop = yCircleAuxControls - 140;
+
+        this.xCircleAuxControlBottom = xCircleAuxControls;
+        this.yCircleAuxControlBottom = yCircleAuxControls + 140;
+
+        this.xCircleAuxControlLeft = xCircleAuxControls - 140;
+        this.yCircleAuxControlLeft = yCircleAuxControls;
+
+        this.xCircleAuxControlRight = xCircleAuxControls + 140;
+        this.yCircleAuxControlRight = yCircleAuxControls;
+
+        invalidate();
+    }
 }
