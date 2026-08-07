@@ -52,6 +52,10 @@ public class ViewService extends Service {
     boolean secondLine = false;
     private boolean isGuideVisible = false;
 
+    private WindowManager.LayoutParams windowParams;
+    private int windowX = 100;
+    private int windowY = 100;
+
     private SharedPreferences prefs;
     private int boardWidth, boardHeight, canvasWidth, canvasHeight, canvasMarginTop;
     private int stepSize = 5;
@@ -82,6 +86,8 @@ public class ViewService extends Service {
         stepSize = prefs.getInt("stepSize", 5);
         opacityPercent = prefs.getInt("opacityPercent", 100);
         colorIndex = prefs.getInt("colorIndex", 0);
+        windowX = prefs.getInt("windowX", 100);
+        windowY = prefs.getInt("windowY", 100);
     }
 
     private void saveDimensions() {
@@ -94,6 +100,8 @@ public class ViewService extends Service {
         editor.putInt("stepSize", stepSize);
         editor.putInt("opacityPercent", opacityPercent);
         editor.putInt("colorIndex", colorIndex);
+        editor.putInt("windowX", windowX);
+        editor.putInt("windowY", windowY);
         editor.apply();
     }
 
@@ -381,11 +389,38 @@ public class ViewService extends Service {
             }
         });
 
-        view.findViewById(R.id.btn_auto_align).setOnClickListener(new View.OnClickListener() {
+        board.setOnTouchListener(new View.OnTouchListener() {
+            private int initialX, initialY;
+            private float initialTouchX, initialTouchY;
+
+            @SuppressLint("ClickableViewAccessibility")
             @Override
-            public void onClick(View v) {
-                mediaPlayer.start();
-                autoAlignDimensions();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!isGuideVisible) return false;
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialX = windowParams != null ? windowParams.x : windowX;
+                        initialY = windowParams != null ? windowParams.y : windowY;
+                        initialTouchX = event.getRawX();
+                        initialTouchY = event.getRawY();
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        if (windowParams != null && windowManager != null && view != null) {
+                            windowParams.x = initialX + (int) (event.getRawX() - initialTouchX);
+                            windowParams.y = initialY + (int) (event.getRawY() - initialTouchY);
+                            windowX = windowParams.x;
+                            windowY = windowParams.y;
+                            windowManager.updateViewLayout(view, windowParams);
+                        }
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        saveDimensions();
+                        return true;
+                }
+                return false;
             }
         });
 
@@ -558,9 +593,7 @@ public class ViewService extends Service {
     }
 
     private void layoutParams() {
-        float boardMarginBottom = getResources().getDimension(R.dimen.boardMarginBottom);
-
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+        windowParams = new WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
@@ -568,12 +601,13 @@ public class ViewService extends Service {
             PixelFormat.TRANSLUCENT
         );
 
-        params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        params.gravity = Gravity.BOTTOM | Gravity.CENTER;
-        params.verticalMargin = boardMarginBottom;
+        windowParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        windowParams.gravity = Gravity.TOP | Gravity.LEFT;
+        windowParams.x = windowX;
+        windowParams.y = windowY;
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        windowManager.addView(view, params);
+        windowManager.addView(view, windowParams);
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {

@@ -44,9 +44,10 @@ public class Trickshot extends View {
 
     int strokeWidth = 6;
     int circle;
-    int radiusCircleOne = 100;
-    int radiusCircleTwo = 100;
-    int radiusCircleAux = 50;
+    int radiusCircleOne = 22;
+    int radiusCircleTwo = 22;
+    int touchRadius = 45;
+    int radiusCircleAux = 22;
     int radiusCircleAuxControls = 60;
     int radiusCircleAuxControl = 50;
 
@@ -55,6 +56,9 @@ public class Trickshot extends View {
     boolean trackStatus, touchedTheWall;
 
     boolean showSecondLine = false;
+
+    private final LineIntersection cachedFirstReflection = new LineIntersection();
+    private final LineIntersection cachedSecondReflection = new LineIntersection();
 
     private int canvasWidth = 1009;
     private int canvasHeight = 458;
@@ -167,37 +171,37 @@ public class Trickshot extends View {
 
                 trackStatus = false;
 
-                if (xOnTouch > (xCircleOne - radiusCircleOne)
-                    && xOnTouch < (xCircleOne + radiusCircleOne)
-                    && yOnTouch > (yCircleOne - radiusCircleOne)
-                    && yOnTouch < (yCircleOne + radiusCircleOne)
+                if (xOnTouch > (xCircleOne - touchRadius)
+                    && xOnTouch < (xCircleOne + touchRadius)
+                    && yOnTouch > (yCircleOne - touchRadius)
+                    && yOnTouch < (yCircleOne + touchRadius)
                 ) {
                     trackStatus = true;
                     circle = 1;
                 }
 
-                if (xOnTouch > (xCircleTwo - radiusCircleTwo)
-                    && xOnTouch < (xCircleTwo + radiusCircleTwo)
-                    && yOnTouch > (yCircleTwo - radiusCircleTwo)
-                    && yOnTouch < (yCircleTwo + radiusCircleTwo)
+                if (xOnTouch > (xCircleTwo - touchRadius)
+                    && xOnTouch < (xCircleTwo + touchRadius)
+                    && yOnTouch > (yCircleTwo - touchRadius)
+                    && yOnTouch < (yCircleTwo + touchRadius)
                 ) {
                     trackStatus = true;
                     circle = 2;
                 }
 
-                if (xOnTouch > (xCircleOneAuxTop - radiusCircleAux)
-                    && xOnTouch < (xCircleOneAuxTop + radiusCircleAux)
-                    && yOnTouch > (yCircleOneAuxTop - radiusCircleAux)
-                    && yOnTouch < (yCircleOneAuxTop + radiusCircleAux)
+                if (xOnTouch > (xCircleOneAuxTop - touchRadius)
+                    && xOnTouch < (xCircleOneAuxTop + touchRadius)
+                    && yOnTouch > (yCircleOneAuxTop - touchRadius)
+                    && yOnTouch < (yCircleOneAuxTop + touchRadius)
                 ) {
                     trackStatus = true;
                     circle = 3;
                 }
 
-                if (xOnTouch > (xCircleOneAuxBottom - radiusCircleAux)
-                    && xOnTouch < (xCircleOneAuxBottom + radiusCircleAux)
-                    && yOnTouch > (yCircleOneAuxBottom - radiusCircleAux)
-                    && yOnTouch < (yCircleOneAuxBottom + radiusCircleAux)
+                if (xOnTouch > (xCircleOneAuxBottom - touchRadius)
+                    && xOnTouch < (xCircleOneAuxBottom + touchRadius)
+                    && yOnTouch > (yCircleOneAuxBottom - touchRadius)
+                    && yOnTouch < (yCircleOneAuxBottom + touchRadius)
                 ) {
                     trackStatus = true;
                     circle = 4;
@@ -398,22 +402,22 @@ public class Trickshot extends View {
         if (touchedTheWall) {
             float reflectedAngleOne = getReflectedAngleOne();
 
-            LineIntersection firstReflectionEnd = LineIntersection.getLineIntersectionPoint(
-                xCircleTwo, yCircleTwo, reflectedAngleOne, getWidth(), getHeight(), radiusBall
+            LineIntersection.calculateLineIntersectionPoint(
+                xCircleTwo, yCircleTwo, reflectedAngleOne, getWidth(), getHeight(), radiusBall, cachedFirstReflection
             );
 
-            canvas.drawLine(xCircleTwo, yCircleTwo, firstReflectionEnd.endX, firstReflectionEnd.endY, reflectLine);
-            canvas.drawCircle(firstReflectionEnd.endX, firstReflectionEnd.endY, radiusBall, circleTwo);
+            canvas.drawLine(xCircleTwo, yCircleTwo, cachedFirstReflection.endX, cachedFirstReflection.endY, reflectLine);
+            canvas.drawCircle(cachedFirstReflection.endX, cachedFirstReflection.endY, radiusBall, circleTwo);
 
             if (showSecondLine) {
-                float reflectedAngleTwo = getReflectedAngleTwo(reflectedAngleOne, firstReflectionEnd);
+                float reflectedAngleTwo = getReflectedAngleTwo(reflectedAngleOne, cachedFirstReflection);
 
-                LineIntersection secondReflectionEnd = LineIntersection.getLineIntersectionPoint(
-                    firstReflectionEnd.endX, firstReflectionEnd.endY, reflectedAngleTwo, getWidth(), getHeight(), radiusBall
+                LineIntersection.calculateLineIntersectionPoint(
+                    cachedFirstReflection.endX, cachedFirstReflection.endY, reflectedAngleTwo, getWidth(), getHeight(), radiusBall, cachedSecondReflection
                 );
 
-                canvas.drawLine(firstReflectionEnd.endX, firstReflectionEnd.endY, secondReflectionEnd.endX, secondReflectionEnd.endY, reflectLine);
-                canvas.drawCircle(secondReflectionEnd.endX, secondReflectionEnd.endY, radiusBall, circleTwo);
+                canvas.drawLine(cachedFirstReflection.endX, cachedFirstReflection.endY, cachedSecondReflection.endX, cachedSecondReflection.endY, reflectLine);
+                canvas.drawCircle(cachedSecondReflection.endX, cachedSecondReflection.endY, radiusBall, circleTwo);
             }
         }
 

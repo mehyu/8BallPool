@@ -20,7 +20,8 @@ public class Normal extends View {
     float xOnMotion, yOnMotion;
     float xCircle, yCircle;
 
-    int radius = 100;
+    int radius = 22;
+    int touchRadius = 45;
     int strokeShadowWidth = 42;
     int strokeLineWidth = 6;
 
@@ -85,10 +86,10 @@ public class Normal extends View {
                 xOnTouch = event.getX();
                 yOnTouch = event.getY();
 
-                trackStatus = xOnTouch > (xCircle - radius)
-                    && xOnTouch < (xCircle + radius)
-                    && yOnTouch > (yCircle - radius)
-                    && yOnTouch < (yCircle + radius);
+                trackStatus = xOnTouch > (xCircle - touchRadius)
+                    && xOnTouch < (xCircle + touchRadius)
+                    && yOnTouch > (yCircle - touchRadius)
+                    && yOnTouch < (yCircle + touchRadius);
 
                 break;
             case MotionEvent.ACTION_MOVE:
